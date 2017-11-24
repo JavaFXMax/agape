@@ -15,11 +15,23 @@ class sharereportsController extends \BaseController{
 	}
 	//Shares Listing Report
 	public function s_listing(){
+		$organization= Organization::find(1);
 		$members=Member::all();
-		$organization=Organization::find(1);
-		$pdf = PDF::loadView('sharereports.pdf.sharelisting', compact('organization','members'))
-		->setPaper('a5')->setOrientation('potrait');
-		return $pdf->stream('Members Shares Report.pdf');
+		$counter=DB::table('members')->count();
+		$view = \View::make('sharereports.pdf.sharelisting', compact('organization','members'));
+		$html = $view->render();
+		if($counter > 75){
+					$pdf = new TCPDF('L');
+		}
+		if($counter <= 75){
+					$pdf = new TCPDF('P');
+		}
+		$pdf->SetTitle('SACCO MEMBERS SHARE REPORT');
+		$pdf->SetPrintHeader(false);
+		$pdf->SetPrintFooter(false);
+		$pdf->AddPage();
+		$pdf->writeHTML($html, true, false, true, false);
+		$pdf->Output('Members Shares Report.pdf');
 	}
 	//Individual Contribution Report
 	public function show(){
@@ -34,22 +46,17 @@ class sharereportsController extends \BaseController{
 		$member=Member::where('id','=',$id)->get()->first();
 		$contributions=Savingtransaction::where('savingaccount_id','=',$id)
 					  ->where('type','=', 'credit')->sum('amount');
-		/*$value=Share::count();
-		if($value>0){
-			$var=share::where('id','=',1)->pluck('value');
-			if($var<=0){
-				$sharevalue=0.00000009;
-			}else{
-				$sharevalue=$var;
-			}
-		$shares=$contributions/$sharevalue;
-        */
 		$transactions=Savingtransaction::where('savingaccount_id','=',$id)->get();
-		$organization=Organization::find(1);
-		$pdf = PDF::loadView('sharereports.pdf.individualcontribution', compact('organization','member','contributions','transactions'))->setPaper('a5')->setOrientation('potrait');
-		return $pdf->stream('Individual Member Contribution Report.pdf');
-		/*}else if($value<=0){
-			return Redirect::back();
-		}*/
+		$organization= Organization::find(1);
+		$view = \View::make('sharereports.pdf.individualcontribution', compact('organization','member','contributions','transactions'));
+		$html = $view->render();
+
+		$pdf = new TCPDF('P');
+		$pdf->SetTitle('SACCO MEMBERS SHARE REPORT');
+		$pdf->SetPrintHeader(false);
+    $pdf->SetPrintFooter(false);
+		$pdf->AddPage();
+		$pdf->writeHTML($html, true, false, true, false);
+		$pdf->Output('Individual Member Contribution Report.pdf');
 	}
 }

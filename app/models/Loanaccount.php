@@ -30,7 +30,7 @@ class Loanaccount extends \Eloquent {
 	}
 
     public static function Loans($id){
-        
+
 		return Loanaccount::where('member_id',$id)->get();
 	}
 
@@ -45,7 +45,7 @@ class Loanaccount extends \Eloquent {
 		return $this->hasMany('Loanguarantor');
 	}
 
-	public static function refinance($member,$loanproduct){		
+	public static function refinance($member,$loanproduct){
 		$product=$loanproduct->id;
 		$memid=$member->id;
 		$loans=Loanaccount::where('member_id',$memid)
@@ -55,12 +55,12 @@ class Loanaccount extends \Eloquent {
 		$total_balance=0;
 		$date=date('Y-m-d');
 		if(count($loans)>0){
-			foreach($loans as $loan){				
+			foreach($loans as $loan){
 				$balance=Loantransaction::getLoanBalance($loan);
 				//Repay all loans
 				$principal_due = $balance/2;
-				$interest_due = $balance/2;				
-				Loanrepayment::payInterest($loan, $date, $interest_due);				
+				$interest_due = $balance/2;
+				Loanrepayment::payInterest($loan, $date, $interest_due);
 				Loanrepayment::payPrincipal($loan, $date, $principal_due);
 				Loantransaction::repayLoan($loan, $balance, $date);
 				//Close all loans
@@ -69,9 +69,9 @@ class Loanaccount extends \Eloquent {
 				$total_balance+=$balance;
 			}
 		}
-		return $total_balance;		
+		return $total_balance;
 	}
-    
+
 	//Close a loan account
 	public static function closeLoan($loanaccount){
 		$loanaccount->loan_status='closed';
@@ -91,7 +91,7 @@ class Loanaccount extends \Eloquent {
         **/
         //end refinance
         //$insurance_amount=Loanaccount::insureLoan(array_get($data, 'repayment_duration'),array_get($data, 'amount_applied'));
-        
+
 		$amount_applied=array_get($data,'amount_applied');
 		//Submit Application
 		$application = new Loanaccount;
@@ -114,9 +114,9 @@ class Loanaccount extends \Eloquent {
 		$loanaccount->account_number = Loanaccount::loanAccountNumber($loanaccount);
 		$loanaccount->update();
 
-		for ($i=0; $i <count(array_get($data, 'purposes')) ; $i++) { 
+		for ($i=0; $i <count(array_get($data, 'purposes')) ; $i++) {
         # code...
-        
+
         if((array_get($data, 'purposes')[$i] != '' || array_get($data, 'purposes')[$i] != null)){
 	        $purpose = new Loanpurpose;
 	        $purpose->loanaccount_id=$application->id;
@@ -150,7 +150,7 @@ class Loanaccount extends \Eloquent {
        }
 
        for ($i=0; $i <count(array_get($data, 'guarantor_id')) ; $i++) {
-        
+
         if((array_get($data, 'guarantor_id')[$i] != '' || array_get($data, 'guarantor_id')[$i] != null)){
             $guarantor = new Loanguarantor;
             $guarantor->loanaccount_id=$application->id;
@@ -203,13 +203,13 @@ class Loanaccount extends \Eloquent {
     Thank you!";
     // Create a new instance of our awesome gateway class
     $gateway    = new AfricasTalkingGateway($username, $apikey);
-    // Any gateway error will be captured by our custom Exception class below, 
+    // Any gateway error will be captured by our custom Exception class below,
     // so wrap the call in a try-catch block
-    try 
-    { 
-      // Thats it, hit send and we'll take care of the rest. 
+    try
+    {
+      // Thats it, hit send and we'll take care of the rest.
       //$results = $gateway->sendMessage($recipients, $message);
-                
+
       /*foreach($results as $result) {
         // status is either "Success" or "error message"
         echo " Number: " .$result->number;
@@ -256,13 +256,13 @@ class Loanaccount extends \Eloquent {
     Thank you!";
     // Create a new instance of our awesome gateway class
     $gateway    = new AfricasTalkingGateway($username, $apikey);
-    // Any gateway error will be captured by our custom Exception class below, 
+    // Any gateway error will be captured by our custom Exception class below,
     // so wrap the call in a try-catch block
-    try 
-    { 
-      // Thats it, hit send and we'll take care of the rest. 
+    try
+    {
+      // Thats it, hit send and we'll take care of the rest.
       //$results = $gateway->sendMessage($recipients, $message);
-                
+
       /*foreach($results as $result) {
         // status is either "Success" or "error message"
         echo " Number: " .$result->number;
@@ -302,13 +302,13 @@ class Loanaccount extends \Eloquent {
     Thank you!";
     // Create a new instance of our awesome gateway class
     $gateway    = new AfricasTalkingGateway($username, $apikey);
-    // Any gateway error will be captured by our custom Exception class below, 
+    // Any gateway error will be captured by our custom Exception class below,
     // so wrap the call in a try-catch block
-    try 
-    { 
-      // Thats it, hit send and we'll take care of the rest. 
+    try
+    {
+      // Thats it, hit send and we'll take care of the rest.
       // $results = $gateway->sendMessage($recipients, $message);
-                
+
       /*foreach($results as $result) {
         // status is either "Success" or "error message"
         echo " Number: " .$result->number;
@@ -326,7 +326,7 @@ class Loanaccount extends \Eloquent {
 		Audit::logAudit(date('Y-m-d'), Confide::user()->username, 'loan application', 'Loans', array_get($data, 'amount_applied'));
 
 	}
-    
+
 	public static function submitShopApplication($data){
 
 		$mem = array_get($data, 'member');
@@ -364,12 +364,12 @@ class Loanaccount extends \Eloquent {
         $a=$period+3.03;
         $b=$amount/6000;
         $insurance_amount=5.03*$a*$b;
-        
+
         return $insurance_amount;
     }
-    
+
 	public static function loanAccountNumber($loanaccount){
-		
+
 		$member = Member::find($loanaccount->member->id);
 
 		$count = count($member->loanaccounts);
@@ -389,7 +389,7 @@ class Loanaccount extends \Eloquent {
 		if($formula == 'SL'){
 			$interest_amount = $principal * $rate;
 		}
-		if($formula == 'RB'){   			    		
+		if($formula == 'RB'){
     		$principal_bal = round(($rate*$principal)/(1-(pow($onerate,-$time))),2);
     		$interest_amount = 0;
     		$interest_amount=($principal_bal*$time)-($principal);
@@ -397,7 +397,7 @@ class Loanaccount extends \Eloquent {
 		return $interest_amount;
 	}
 
-	public static function getEMPTacsix($loanaccount){		 
+	public static function getEMPTacsix($loanaccount){
 		$principal = $loanaccount->amount_disbursed;
 		$rate = $loanaccount->interest_rate/100;
 		$time = $loanaccount->repayment_duration;
@@ -418,17 +418,17 @@ class Loanaccount extends \Eloquent {
 		if($formula == 'SL'){
 			$interest_amount = $principal * $rate * $time;
 		}
-		if($formula == 'RB'){   
+		if($formula == 'RB'){
 	 		if($loanaccount->repayment_duration > 0){
 	 			$timer=$loanaccount->repayment_duration;
 	 		}else{
 	 			$timer=$loanaccount->period;
 	 		}
    			$principal_bal = round(($rate*$principal)/(1-(pow($onerate,-$timer))),2);
-    		$interest_amount = 0;    		 	
+    		$interest_amount = 0;
         	for($i=1;$i<=$time;$i++){
         		$interest_amount=($principal_bal*$timer)-($principal);
-        	}    		        	
+        	}
 		}
 		return $interest_amount;
 	}
@@ -437,7 +437,7 @@ class Loanaccount extends \Eloquent {
 	public static function hasAccount($member, $loanproduct){
 
 		foreach ($member->loanaccounts as $loanaccount) {
-			
+
 			if($loanaccount->loanproduct->name == $loanproduct->name){
 
 				return true;
@@ -462,15 +462,15 @@ class Loanaccount extends \Eloquent {
                 $rst_amount = $principal * $rate * $time;
                 $total= $amount+$rst_amount;
             }
-            if($formula == 'RB'){       
+            if($formula == 'RB'){
                 $principal_bal = round(($rate*$principal)/(1-(pow($onerate,-$time))),2);
-                $rst_amount=($principal_bal*$time)-$principal; 
-                $total= $principal+$rst_amount;       
-            }            						
+                $rst_amount=($principal_bal*$time)-$principal;
+                $total= $principal+$rst_amount;
+            }
 			return $total;
 		}else {
 			return 0;
-		}		
+		}
 	}
 
 	public static function getDurationAmount($loanaccount){
@@ -482,7 +482,7 @@ class Loanaccount extends \Eloquent {
 		} else {
 			$amount = $total/$loanaccount->period;
 		}
-		return $amount;		
+		return $amount;
 	}
 
 
@@ -517,7 +517,7 @@ class Loanaccount extends \Eloquent {
 			}
 			if($loanaccount->loanproduct->formula == 'SL'){
 				$mp = $loanamount/$period;
-			}				
+			}
 		}
 		if($loanaccount->loanproduct->amortization == 'EI'){
 			if($loanaccount->repayment_duration > 0){
@@ -525,7 +525,7 @@ class Loanaccount extends \Eloquent {
 	 		}else{
 	 			$timer=$loanaccount->period;
 	 		}
-			$mp = $loanamount / $timer;			
+			$mp = $loanamount / $timer;
 		}
 		return $mp;
 	}
@@ -556,8 +556,8 @@ class Loanaccount extends \Eloquent {
 			if($date == $period){
 				if($transaction->type == 'credit'){
 					$amount = $transaction->amount;
-				}			
-			} 			
+				}
+			}
 		}
 		return $amount;
 	}
@@ -575,13 +575,13 @@ class Loanaccount extends \Eloquent {
 				if($transaction->type == 'credit'){
 					$amount = $transaction->amount;
 				}
-				
-			} 
-			
+
+			}
+
 		}
 
 
 		return $loanaccount;
 	}
-	
+
 }

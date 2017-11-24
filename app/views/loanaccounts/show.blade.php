@@ -12,8 +12,8 @@ function asMoney($value) {
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
-            <strong>{{{ Session::get('repayment') }}}</strong> 
-          </div>      
+            <strong>{{{ Session::get('repayment') }}}</strong>
+          </div>
        @endif    
 <div class="col-lg-4">
 <table class="table table-hover">
@@ -24,48 +24,48 @@ function asMoney($value) {
     <td>Loan Account</td><td>{{ $loanaccount->account_number }}</td>
   </tr>
 </table>
-</div>  
+</div>
   <div class="col-lg-8 pull-right">
        @if (Session::has('completed'))
             <div class="alert alert-info alert-dismissible fade in" role="alert">
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
-            <strong>{{{ Session::get('completed') }}}</strong> 
-          </div>      
-       @endif     
+            <strong>{{{ Session::get('completed') }}}</strong>
+          </div>
+       @endif
        @if (Session::has('recover'))
               <div class="alert alert-success alert-dismissible fade in" role="alert">
               <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
-              <strong>{{{ Session::get('recover') }}}</strong> 
-            </div>      
-        @endif     
+              <strong>{{{ Session::get('recover') }}}</strong>
+            </div>
+        @endif
        @if (Session::has('convert'))
             <div class="alert alert-success alert-dismissible fade in" role="alert">
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
-            <strong>{{{ Session::get('convert') }}}</strong> 
-          </div>      
-      @endif     
+            <strong>{{{ Session::get('convert') }}}</strong>
+          </div>
+      @endif
      @if (Session::has('flash_message'))
             <div class="alert alert-success alert-dismissible fade in" role="alert">
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
-            <strong>{{{ Session::get('flash_message') }}}</strong> 
-          </div>      
-      @endif     
+            <strong>{{{ Session::get('flash_message') }}}</strong>
+          </div>
+      @endif
        @if (Session::has('delete_message'))
             <div class="alert alert-danger alert-dismissible fade in" role="alert">
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
-            <strong>{{{ Session::get('delete_message') }}}</strong> 
-          </div>      
-      @endif           
+            <strong>{{{ Session::get('delete_message') }}}</strong>
+          </div>
+      @endif
 </div>
 <div class="col-lg-5 pull-right">
  <a  class="btn btn-success btn-sm" href="{{ URL::to('loanrepayments/create/'.$loanaccount->id) }}"> <span class="glyphicon glyphicon-file" aria-hidden="true"></span> Repay Loan</a>
@@ -74,9 +74,9 @@ function asMoney($value) {
  <a  class="btn btn-success btn-sm" href="{{ URL::to('loanaccounts/topup/'.$loanaccount->id) }}"> <span class="glyphicon glyphicon-download" aria-hidden="true"></span> Top up Loan</a>
 </div>
 <div class="col-lg-5 pull-right" style="margin-top: 1.8%;">
-  <a  class="btn btn-primary btn-sm" href="{{ URL::to('loanrepayments/recover/'.$loanaccount->id) }}"> 
+  <a  class="btn btn-primary btn-sm" href="{{ URL::to('loanrepayments/recover/'.$loanaccount->id) }}">
   <span class="fa fa-hand-paper-o" aria-hidden="true"></span> Recover Loan</a>
-<a  class="btn btn-warning btn-sm" href="{{ URL::to('loanrepayments/convert/'.$loanaccount->id) }}"> 
+<a  class="btn btn-warning btn-sm" href="{{ URL::to('loanrepayments/convert/'.$loanaccount->id) }}">
   <span class="fa fa-line-chart" aria-hidden="true"></span> Convert Loan</a>
   @if(Loantransaction::getLoanBalance($loanaccount)<=0)
   <a class="btn btn-info btn-sm" href="{{ URL::to('loantransactions/certificate/'.$loanaccount->id)}}" target="_blank">
@@ -110,7 +110,7 @@ function asMoney($value) {
   </tr>
   <tr>
     <td>Loan Amount</td><td>{{ asMoney($loanaccount->amount_disbursed + $interest)}}</td>
-  </tr> 
+  </tr>
 -->
 </table>
 </div>
@@ -155,7 +155,7 @@ function asMoney($value) {
 <div class="row">
   <div class="col-lg-12">
 <hr>
-</div>  
+</div>
 </div>
 <div class="row">
   <div class="col-lg-12">
@@ -173,12 +173,12 @@ function asMoney($value) {
   <div class="tab-content">
     <div role="tabpanel" class="tab-pane active" id="remittance">
       <br>
-      <div class="col-lg-12"> 
+      <div class="col-lg-12">
         <div class="panel panel-default">
             <div class="panel-heading">
                <p>Loan Schedule</p>
              <!-- <a href="{{URL::to('loans/schedule/'.$loanaccount->id)}}" class="btn btn-success btn-sm"> <i class="glyphicon glyphicon-file"> </i> Print Schedule</a>
--->            
+-->
             </div>
         <div class="panel-body">
         <table class="table table-condensed table-hover">
@@ -188,13 +188,13 @@ function asMoney($value) {
             <th>Principal </th>
             <th>Interest </th>
             <th>Total </th>
-            <th>Loan Balance </th>           
+            <th>Loan Balance </th>
           </thead>
           <tbody>
             <tr>
               <td>0</td>
               <td>
-                <?php 
+                <?php
                     $date = date("d-M-Y", strtotime($loanaccount->date_disbursed));
                     $rate = $loanaccount->interest_rate/100;
                     $onerate= 1+ $rate;
@@ -205,25 +205,25 @@ function asMoney($value) {
                         $rst_amount = $amount * $rate * $time;
                         $totalamount= $amount+$rst_amount;
                     }
-                    if($formula == 'RB'){ 
+                    if($formula == 'RB'){
                       if($loanaccount->repayment_duration > 0){
                           $timer=$loanaccount->repayment_duration;
                         }else{
                           $timer=$loanaccount->period;
-                        }      
+                        }
                         $principal_bal = round(($rate*$amount)/(1-(pow($onerate,-$timer))),2);
-                        $rst_amount=($principal_bal*$timer)-$amount; 
-                        $totalamount= $amount+$rst_amount;       
-                    }            
+                        $rst_amount=($principal_bal*$timer)-$amount;
+                        $totalamount= $amount+$rst_amount;
+                    }
                 ?>
                 {{ $date }}
               </td>
               <td>{{ asMoney($loanaccount->amount_disbursed + $loanaccount->top_up_amount)}}</td>
               <td>{{ asMoney($rst_amount)}}</td>
               <td>{{ asMoney($totalamount)  }}</td>
-              <td>{{ asMoney($totalamount)  }}</td>              
+              <td>{{ asMoney($totalamount)  }}</td>
             </tr>
-            <?php 
+            <?php
                 $date = date("d-M-Y", strtotime($loanaccount->repayment_start_date));
                 $interest = Loanaccount::getInterestAmount($loanaccount);
                 $principal = $loanaccount->amount_disbursed + $loanaccount->top_up_amount;
@@ -237,19 +237,19 @@ function asMoney($value) {
                 }
                 $principal_amount =$principal/ $period;
                 $total_principal = 0;
-            for($i=1; $i<=$period; $i++) { ?>               
+            for($i=1; $i<=$period; $i++) { ?>
             <tr>
               <td>{{ $i }}</td>
               <td>
                 {{ $date  }}
               </td>
-              <td> 
-                <?php 
-                  $total_principal = $total_principal + $principal_amount; 
+              <td>
+                <?php
+                  $total_principal = $total_principal + $principal_amount;
                 ?>
                 {{ asMoney($principal_amount)}} </td>
-              <td> 
-                <?php 
+              <td>
+                <?php
                   if($loanaccount->loanproduct->formula == 'SL'){
                     $interest_amount = $interest/$period;
                   }
@@ -258,17 +258,17 @@ function asMoney($value) {
                   }
                 ?>
                 {{ asMoney($interest_amount)}} </td>
-              <td> 
+              <td>
                 <?php
                  $total = ($principal_amount + $interest_amount);
                   $totalint = $totalint + $total;
                 ?>
                 {{ asMoney($total)}} </td>
-              <td>             
+              <td>
                 {{ asMoney($balance - $total)}}
               </td>
               <!--
-               <td>             
+               <td>
               @if($loanaccount->loanproduct->amortization == 'EI')
                               {{ asMoney(Loanaccount::getEMP($loanaccount))}}
               @endif
@@ -280,17 +280,17 @@ function asMoney($value) {
               -->
             </tr>
             <?php
-              $balance = $balance - $total; 
+              $balance = $balance - $total;
               $days = $days + 30;
               //$date = date('Y-m-d', strtotime($date) + $days);
               $date = date('d-M-Y', strtotime($date. ' + 30 days'));
-                //$date = date('Y-m-d', $date);            
+                //$date = date('Y-m-d', $date);
           } ?>
           </tbody>
         </table>
 </div>
 </div>
-      </div>      
+      </div>
     </div>
     <div role="tabpanel" class="tab-pane" id="profile">
       <br>
@@ -336,18 +336,18 @@ function asMoney($value) {
           <td> 1</td>
           <td>
 
-            <?php 
+            <?php
 
             $date = date("d-M-Y", strtotime($loanaccount->date_disbursed));
             ?>
 
             {{ $date}}</td>
           <td>Loan disbursement</td>
-          
+
           <td> 0.00</td>
           <td >{{ asMoney($loanaccount->amount_disbursed)}}</td>
           <td>
-          </td> 
+          </td>
 
 
          </tr>
@@ -361,14 +361,14 @@ function asMoney($value) {
           <td> {{ $i }}</td>
           <td>
 
-            <?php 
+            <?php
 
             $date = date("d-M-Y", strtotime($transaction->date));
             ?>
 
             {{ $date }}
           </td>
-          <td>{{ $transaction->description }}</td>      
+          <td>{{ $transaction->description }}</td>
            @if( $transaction->type == 'debit')
             <td>
               0.00
@@ -387,7 +387,7 @@ function asMoney($value) {
                 <span class="glyphicon glyphicon-file" aria-hidden="true"></span>
                 Receipt
             </a>
-          </td> 
+          </td>
         </tr>
         <?php $i++; ?>
         @endif
@@ -412,7 +412,7 @@ function asMoney($value) {
 
     <div class="panel panel-default">
       <div class="panel-heading">
-         <p>Loan Overpayments                       
+         <p>Loan Overpayments
           <a  href="{{ URL::to('loantransactions/overpayments/'.$loanaccount->id)}}"
            target="_blank" class="pull-right">
            <span class="glyphicon glyphicon-file" aria-hidden="true"></span>
@@ -443,8 +443,8 @@ function asMoney($value) {
 
          <th>Loan Account</th>
          <th>Guaranteed Amount</th>
-         
-           
+
+
         <th></th>
 
       </thead>
@@ -461,13 +461,13 @@ function asMoney($value) {
           <td>{{ $guarantor->member->name }}</td>
           <td>{{ $guarantor->loanaccount->account_number }}</td>
           <td>{{ $guarantor->amount }}</td>
-          
 
-       
 
-           
 
-         
+
+
+
+
 
         <td>
 
@@ -475,13 +475,13 @@ function asMoney($value) {
                   <button type="button" class="btn btn-info btn-sm dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
                     Action <span class="caret"></span>
                   </button>
-          
+
                   <ul class="dropdown-menu" role="menu">
-                   
+
                     <li><a href="{{URL::to('loanguarantors/edit/'.$guarantor->id)}}">Update</a></li>
-                   
+
                     <li><a href="{{URL::to('loanguarantors/delete/'.$guarantor->id)}}">Remove</a></li>
-                    
+
                   </ul>
               </div>
 
@@ -522,10 +522,10 @@ function asMoney($value) {
 
             <div class="panel panel-default">
               <div class="panel-heading">
-             
+
 
             </div>
-            
+
             <div class="panel-body">
 
 
@@ -535,25 +535,25 @@ function asMoney($value) {
                   <thead>
 
                     <th>#</th>
-                   
+
                     <th>Member </th>
                     <th>Branch </th>
                     <th>Amount Guaranteed</th>
-         
+
                     <th></th>
 
                   </thead>
-                  
+
                   <tbody>
 
                       <?php $i = 1; ?>
-                    
-                 
+
+
 
                     <tr>
 
                       <td> </td>
-                    
+
                       <td></td>
                       <td></td>
                       <td></td>
@@ -561,7 +561,7 @@ function asMoney($value) {
                     </tr>
 
                       <?php $i++; ?>
-                   
+
 
 
                   </tbody>

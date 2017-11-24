@@ -1,70 +1,59 @@
-<html>
-  <head>     
-   <style>
-     @page { margin: 170px 30px; }
-     .header { position: fixed; left: 0px; top: -150px; right: 0px; height: 150px;  text-align: center; }
-     .footer { position: fixed; left: 0px; bottom: -180px; right: 0px; height: 50px;  }
-     .footer .page:after { content: counter(page, upper-roman); }
-     .content { margin-top: -70px;  }      
-   </style>
-  <body style="font-size:10px">
-    <?php
-    function asMoney($value) {
-      return number_format($value, 2);
-    }
-    ?>
-   <div class="header">
-     <table >
+<?php
+function asMoney($value) {
+  return number_format($value, 2);
+}
+?>
+<html >
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+</head>
+<body style="font-size: 12px;">
+     <table>
       <tr>
-        <td style="width:150px">
-            <img src="{{ asset('../images/logo.png') }}" alt="{{ $organization->logo }}" width="150px"/>
-        </td>
-        <td>
+        <th style="width:150px">
+             <img src="{{ asset('public/uploads/logo/'.$organization->logo ) }}" alt="{{ $organization->logo }}" width="150px" height="150px"/>
+        </th>
+        <th>
         <strong>
           {{ strtoupper($organization->name)}}<br>
           </strong>
-          {{ $organization->phone}} |
-          {{ $organization->email}} |
-          {{ $organization->website}}<br>
-          {{ $organization->address}}
-        </td>
-        <td>
-          <strong><h3>MEMBER INDIVIDUAL CONTRIBUTION </h3></strong>
-        </td>
-      </tr>
-      <tr>
-      <hr>
+          {{ $organization->phone}}<br>
+          &nbsp; {{ $organization->email}} <br>
+          &nbsp; {{ $organization->website}}<br>
+          &nbsp; {{ $organization->address}}
+        </th>
+        <th>
+          <strong>
+            MEMBER CONTRIBUTION
+           </strong>
+        </th>
       </tr>
     </table>
-   </div>
-   <div class="footer">
-     <p class="page">Page <?php $PAGE_NUM ?></p>
-   </div>
-   <div class="content">
-      <table class="table table-bordered">
+    <br><br><br>
+      <table>
           <tr>
-            <td style="width:17%">Member</td><td>{{ucwords($member->name)}}</td>
+            <th style="height: 30px;">Member: &nbsp;{{ucwords($member->name)}}</th>
           </tr>
           <tr>
-            <td>Member #</td><td>{{ucwords($member->membership_no)}}</td>
-          </tr>  
+            <th style="height: 30px;">Member #:&nbsp;{{ucwords($member->membership_no)}}</th>
+          </tr>
           <tr>
-            <td>Total Contributions</td><td>{{asMoney($contributions)}}</td>
-          </tr>   
+            <th style="height: 30px;">Total Contributions:&nbsp;{{asMoney($contributions)}}</th>
+          </tr>
           <tr>
-            <td>Total Shares</td><td>{{asMoney($contributions)}}</td>
-          </tr> 
+            <th style="height: 30px;">Total Shares: &nbsp;{{asMoney($contributions)}}</th>
+          </tr>
           <tr>
-            <td>Accrued Dividends</td><td>{{asMoney($contributions/40)}}</td>
-          </tr>  
+            <th style="height: 30px;">Accrued Dividends:&nbsp;{{asMoney($contributions/40)}}</th>
+          </tr>
       </table>
       <br><br>
-      <table class="table table-bordered" style="width:100%">          
+      <table border="1">
           <tr style="font-weight:bold">
-              <td>Date</td>
-              <td>Amount</td>
-              <td>Type</td>
-              <td>Description</td>                         
+              <th style="height: 30px;text-align:center;">Date</th>
+              <th style="height: 30px;text-align:center;">Amount</th>
+              <th style="height: 30px;text-align:center;">Type</th>
+              <th style="height: 30px;text-align:center;">Description</th>
           </tr>
           <tbody>
           <?php
@@ -72,27 +61,28 @@
           ?>
             @foreach($transactions as $transact)
              <tr>
-                <td>
-                  <?php 
+                <td style="height: 30px;text-align:center;">
+                  <?php
                    $date = date("d-M-Y", strtotime($transact->date));
                   ?>
                   {{$date}}
                 </td>
-                <td>{{asMoney($amount=$transact->amount)}}</td>
-                <td>{{$transact->type}}</td>
-                <td>{{$transact->description}}</td>                 
-              </tr> 
+                <td style="height: 30px;text-align:center;">{{asMoney($amount=$transact->amount)}}</td>
+                <td style="height: 30px;text-align:center;">{{$transact->type}}</td>
+                <td style="height: 30px;text-align:center;">{{$transact->description}}</td>
+              </tr>
               <?php
                 $total+=$amount;
               ?>
-              @endforeach                       
+              @endforeach
           </tbody>
-      </table>      
-        <p style="margin-top:3%; margin-left: 26%;">
+      </table>
+      <br><br>
+        <p>
           <strong>
-              Total Contributions: &emsp; {{ asMoney($total)}}
+              Total Contributions: &nbsp; {{ asMoney($total)}}
           </strong>
-        </p>        
+        </p>
    </div>
  </body>
  </html>

@@ -153,15 +153,12 @@ class LoantransactionsController extends \BaseController {
 
 
 	public function receipt($id){
-
 		$transaction = Loantransaction::findOrFail($id);
         $interest_paid = Loanrepayment::where('transaction_id','=',$id)->sum('interest_paid');
         $insurance_paid = Loanrepayment::where('transaction_id','=',$id)->sum('insurance_paid');
         $principal_paid = Loanrepayment::where('transaction_id','=',$id)->sum('principal_paid');
 		$organization = Organization::findOrFail(1);
-
 		$pdf = PDF::loadView('pdf.loanreports.receipt', compact('transaction','interest_paid','insurance_paid','principal_paid', 'organization'))->setPaper('a5')->setOrientation('potrait');;
- 	
 		return $pdf->stream('receipt.pdf');
 
 

@@ -11,6 +11,7 @@
 
 namespace Symfony\Component\Debug\Tests;
 
+use PHPUnit\Framework\TestCase;
 use Psr\Log\LogLevel;
 use Symfony\Component\Debug\ErrorHandler;
 use Symfony\Component\Debug\Exception\ContextErrorException;
@@ -21,7 +22,7 @@ use Symfony\Component\Debug\Exception\ContextErrorException;
  * @author Robert Schönthal <seroscho@googlemail.com>
  * @author Nicolas Grekas <p@tchwork.com>
  */
-class ErrorHandlerTest extends \PHPUnit_Framework_TestCase
+class ErrorHandlerTest extends TestCase
 {
     public function testRegister()
     {
@@ -78,7 +79,9 @@ class ErrorHandlerTest extends \PHPUnit_Framework_TestCase
             $this->assertEquals(E_NOTICE, $exception->getSeverity());
             $this->assertEquals(__FILE__, $exception->getFile());
             $this->assertRegExp('/^Notice: Undefined variable: (foo|bar)/', $exception->getMessage());
-            $this->assertArrayHasKey('foobar', $exception->getContext());
+            if (\PHP_VERSION_ID < 70200) {
+                $this->assertArrayHasKey('foobar', $exception->getContext());
+            }
 
             $trace = $exception->getTrace();
             $this->assertEquals(__FILE__, $trace[0]['file']);

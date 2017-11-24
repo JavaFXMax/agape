@@ -126,6 +126,7 @@ class Response
         100 => 'Continue',
         101 => 'Switching Protocols',
         102 => 'Processing',            // RFC2518
+        103 => 'Early Hints',
         200 => 'OK',
         201 => 'Created',
         202 => 'Accepted',
@@ -158,10 +159,10 @@ class Response
         410 => 'Gone',
         411 => 'Length Required',
         412 => 'Precondition Failed',
-        413 => 'Request Entity Too Large',
-        414 => 'Request-URI Too Long',
+        413 => 'Payload Too Large',
+        414 => 'URI Too Long',
         415 => 'Unsupported Media Type',
-        416 => 'Requested Range Not Satisfiable',
+        416 => 'Range Not Satisfiable',
         417 => 'Expectation Failed',
         418 => 'I\'m a teapot',                                               // RFC2324
         421 => 'Misdirected Request',                                         // RFC7540
@@ -180,7 +181,7 @@ class Response
         503 => 'Service Unavailable',
         504 => 'Gateway Timeout',
         505 => 'HTTP Version Not Supported',
-        506 => 'Variant Also Negotiates (Experimental)',                      // RFC2295
+        506 => 'Variant Also Negotiates',                                     // RFC2295
         507 => 'Insufficient Storage',                                        // RFC4918
         508 => 'Loop Detected',                                               // RFC5842
         510 => 'Not Extended',                                                // RFC2774
@@ -188,8 +189,6 @@ class Response
     );
 
     /**
-     * Constructor.
-     *
      * @param mixed $content The response content, see setContent()
      * @param int   $status  The response status code
      * @param array $headers An array of response headers
@@ -259,8 +258,6 @@ class Response
      * This method tweaks the Response to ensure that it is
      * compliant with RFC 2616. Most of the changes are based on
      * the Request that is "associated" with this Response.
-     *
-     * @param Request $request A Request instance
      *
      * @return $this
      */
@@ -441,11 +438,11 @@ class Response
     /**
      * Sets the response status code.
      *
-     * @param int   $code HTTP status code
-     * @param mixed $text HTTP status text
-     *
      * If the status text is null it will be automatically populated for the known
      * status codes and left empty otherwise.
+     *
+     * @param int   $code HTTP status code
+     * @param mixed $text HTTP status text
      *
      * @return $this
      *
@@ -617,8 +614,6 @@ class Response
 
     /**
      * Sets the Date header.
-     *
-     * @param \DateTime $date A \DateTime instance
      *
      * @return $this
      */
@@ -994,8 +989,6 @@ class Response
      * If the Response is not modified, it sets the status code to 304 and
      * removes the actual content by calling the setNotModified() method.
      *
-     * @param Request $request A Request instance
-     *
      * @return bool true if the Response validators match the Request, false otherwise
      */
     public function isNotModified(Request $request)
@@ -1151,7 +1144,7 @@ class Response
         $level = count($status);
         $flags = defined('PHP_OUTPUT_HANDLER_REMOVABLE') ? PHP_OUTPUT_HANDLER_REMOVABLE | ($flush ? PHP_OUTPUT_HANDLER_FLUSHABLE : PHP_OUTPUT_HANDLER_CLEANABLE) : -1;
 
-        while ($level-- > $targetLevel && ($s = $status[$level]) && (!isset($s['del']) ? !isset($s['flags']) || $flags === ($s['flags'] & $flags) : $s['del'])) {
+        while ($level-- > $targetLevel && ($s = $status[$level]) && (!isset($s['del']) ? !isset($s['flags']) || ($s['flags'] & $flags) === $flags : $s['del'])) {
             if ($flush) {
                 ob_end_flush();
             } else {
@@ -1167,7 +1160,7 @@ class Response
      */
     protected function ensureIEOverSSLCompatibility(Request $request)
     {
-        if (false !== stripos($this->headers->get('Content-Disposition'), 'attachment') && preg_match('/MSIE (.*?);/i', $request->server->get('HTTP_USER_AGENT'), $match) == 1 && true === $request->isSecure()) {
+        if (false !== stripos($this->headers->get('Content-Disposition'), 'attachment') && 1 == preg_match('/MSIE (.*?);/i', $request->server->get('HTTP_USER_AGENT'), $match) && true === $request->isSecure()) {
             if ((int) preg_replace('/(MSIE )(.*?);/', '$2', $match[0]) < 9) {
                 $this->headers->remove('Cache-Control');
             }

@@ -11,13 +11,14 @@
 
 namespace Symfony\Component\HttpFoundation\Tests;
 
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\HttpFoundation\Cookie;
 
 /**
  * @group time-sensitive
  */
-class ResponseHeaderBagTest extends \PHPUnit_Framework_TestCase
+class ResponseHeaderBagTest extends TestCase
 {
     /**
      * @dataProvider provideAllPreserveCase
@@ -109,6 +110,17 @@ class ResponseHeaderBagTest extends \PHPUnit_Framework_TestCase
         $bag = new ResponseHeaderBag();
         $bag->set('Last-Modified', 'abcde');
         $this->assertEquals('private, must-revalidate', $bag->get('Cache-Control'));
+
+        $bag = new ResponseHeaderBag();
+        $bag->set('Cache-Control', array('public', 'must-revalidate'));
+        $this->assertCount(1, $bag->get('Cache-Control', null, false));
+        $this->assertEquals('must-revalidate, public', $bag->get('Cache-Control'));
+
+        $bag = new ResponseHeaderBag();
+        $bag->set('Cache-Control', 'public');
+        $bag->set('Cache-Control', 'must-revalidate', false);
+        $this->assertCount(1, $bag->get('Cache-Control', null, false));
+        $this->assertEquals('must-revalidate, public', $bag->get('Cache-Control'));
     }
 
     public function testToStringIncludesCookieHeaders()

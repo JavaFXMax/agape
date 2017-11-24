@@ -87,8 +87,6 @@ class ButtonTest extends FormerTests
 
 	public function testCanCreateButtonWithIcon()
 	{
-        $this->markTestSkipped('Fatals with `Could not load XML from object`');
-
 		$button           = $this->former->button('Save')->icon('save');
 		$matcher          = $this->matchButton('btn', 'Save');
 		$matcher['child'] = array(

@@ -46,8 +46,6 @@ class FormerTest extends FormerTests
 
 	public function testCanCreateFormLegends()
 	{
-        $this->markTestSkipped('Fatals with `Could not load XML from object`');
-
 		$legend = $this->former->legend('test', $this->testAttributes);
 
 		$this->assertHTML($this->matchLegend(), $legend);
@@ -55,8 +53,6 @@ class FormerTest extends FormerTests
 
 	public function testCanCreateFormLabels()
 	{
-        $this->markTestSkipped('Fatals with `Could not load XML from object`');
-
 		$label = $this->former->label('foo');
 
 		$this->assertLabel($label);
@@ -71,8 +67,6 @@ class FormerTest extends FormerTests
 
 	public function testCanCreateFormMacros()
 	{
-        $this->markTestSkipped('Fatals with `Could not load XML from object`');
-
 		$former = $this->former;
 		$this->former->macro('captcha', function ($name = null) use ($former) {
 			return $former->text($name)->raw();
